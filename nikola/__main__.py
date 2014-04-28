@@ -52,6 +52,38 @@ from .utils import _reload, sys_decode, get_root_dir, req_missing, LOGGER, STRIC
 
 config = {}
 
+class ProgressBarTestReporter(ExecutedOnlyReporter):
+
+    def initialize(self, tasks):
+        self.taskcount = len(tasks)
+        self.tasks = tasks
+        self.done = 0
+        self.donetasks = []
+
+    def execute_task(self, task):
+        self.done += 1
+        self.donetasks.append(task)
+        self.print_ratio('e|' + repr(task))
+
+    def skip_uptodate(self, task):
+        self.done += 1
+        self.donetasks.append(task)
+        self.print_ratio('u|' + repr(task))
+
+    def skip_ignore(self, task):
+        self.done += 1
+        self.donetasks.append(task)
+        self.print_ratio('i|' + repr(task))
+
+    def print_ratio(self, action):
+        self.write('{0} / {1} = {2:f} ({3})\n'.format(self.done, self.taskcount, float(self.done)/float(self.taskcount), action))
+
+    def complete_run(self):
+        ntasks = self.tasks.values()
+        for t in self.donetasks:
+            ntasks.remove(t)
+        print('LEFTOVER TASKS: {0}'.format(ntasks))
+        super(ProgressBarTestReporter, self).complete_run()
 
 def main(args=None):
     colorful = False
@@ -210,7 +242,7 @@ class NikolaTaskLoader(TaskLoader):
             }
         else:
             DOIT_CONFIG = {
-                'reporter': ExecutedOnlyReporter,
+                'reporter': ProgressBarTestReporter,
             }
         DOIT_CONFIG['default_tasks'] = ['render_site', 'post_render']
         tasks = generate_tasks(
