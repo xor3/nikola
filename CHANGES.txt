@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* AddThis is no longer added by default to users’ sites
 * added ``-e``, ``--edit`` parameter to ``new_post`` and ``new_page`` to open
   $EDITOR after creation (Issue #1294)
 * added ``scanned`` signal (after posts are scanned) (via Issue #1291)
