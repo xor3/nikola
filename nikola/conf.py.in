@@ -80,6 +80,9 @@ TRANSLATIONS_PATTERN = ${TRANSLATIONS_PATTERN}
 NAVIGATION_LINKS = ${NAVIGATION_LINKS}
 
 # Name of the theme to use.
+# WARNING: With this Nikola package, the bootstrap3 and bootstrap3-jinja
+#          themes must be installed separately. In order to do this,
+#          use: nikola install_bs3
 THEME = ${THEME}
 
 ##############################################

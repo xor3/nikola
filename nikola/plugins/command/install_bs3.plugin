@@ -1,0 +1,9 @@
+[Core]
+Name = install_bs3
+Module = install_bs3
+
+[Documentation]
+Author = Roberto Alsina, Chris Warrick
+Version = 0.1
+Website = http://getnikola.com
+Description = Install the bootstrap3 theme into the current site.

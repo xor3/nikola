@@ -57,7 +57,7 @@ SAMPLE_CONF = {
     # Example for another language:
     # "es": "./es",
 }""",
-    'THEME': 'bootstrap3',
+    'THEME': 'bootstrap',
     'TIMEZONE': 'UTC',
     'COMMENT_SYSTEM': 'disqus',
     'COMMENT_SYSTEM_ID': 'nikolademo',
@@ -343,7 +343,16 @@ class CommandInit(Command):
                 answer = ask('Comment system site identifier', '')
                 SAMPLE_CONF['COMMENT_SYSTEM_ID'] = answer
 
-        STORAGE = {'target': target}
+        def debhandler(default, toconf):
+            print("The Nikola package you're using does not ship with the Bootstrap 3 theme family (due to licensing issues in Debian), which are the Nikola default.")
+            print("However, you can (and should) download the theme manually.")
+            print("")
+            q = ask_yesno("Install the Bootstrap 3 themes and default to them?", True)
+            STORAGE['deb_bs3'] = q
+            if not q:
+                print("You can install the themes at any later point -- use `nikola install_bs3`.")
+
+        STORAGE = {'target': target, 'deb_bs3': True}
 
         questions = [
             ('Questions about the site', None, None, None),
@@ -359,6 +368,8 @@ class CommandInit(Command):
             (tzhandler, None, True, True),
             ('Questions about comments', None, None, None),
             (chandler, None, True, True),
+            ('Bootstrap 3 themes', None, None, None),
+            (debhandler, None, True, True),
         ]
 
         print("Creating Nikola Site")
@@ -396,6 +407,7 @@ class CommandInit(Command):
             target = args[0]
         except IndexError:
             target = None
+        deb_bs3 = False
         if not options.get('quiet'):
             st = self.ask_questions(target=target)
             try:
@@ -403,6 +415,7 @@ class CommandInit(Command):
                     target = st['target']
             except KeyError:
                 pass
+            deb_bs3 = st['deb_bs3']
 
         if not target:
             print("Usage: nikola init [--demo] [--quiet] folder")
@@ -421,3 +434,10 @@ Options:
             LOGGER.info("See README.txt in that folder for more information.")
 
         self.create_configuration(target)
+        if deb_bs3:
+            os.chdir(target)
+            import nikola.plugins.command.install_bs3 as bs3
+            s = bs3.CommandInstallThemeBS3()._execute([], {})
+            if not s:
+                print("The installation failed.  Use `nikola install_bs3` to try again.")
+                print("You might need to change `conf.py` to use 'bootstrap' (version 2) if it continues to fail.")
