@@ -138,7 +138,7 @@ def remove_old_files(self):
 
 class nikola_install(install):
     def run(self):
-        expands_symlinks_for_windows()
+        #expands_symlinks_for_windows()
         remove_old_files(self)
         install.run(self)
         install_manpages(self.root, self.prefix)
