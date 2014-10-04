@@ -130,12 +130,12 @@ class ImportMixin(object):
 
         utils.makedirs(os.path.dirname(filename))
         with io.open(filename, "w+", encoding="utf8") as fd:
-            fd.write('{0}\n'.format(title))
-            fd.write('{0}\n'.format(slug))
-            fd.write('{0}\n'.format(post_date))
-            fd.write('{0}\n'.format(','.join(tags)))
-            fd.write('\n')
-            fd.write('{0}\n'.format(description))
+            fd.write(u'{0}\n'.format(title))
+            fd.write(u'{0}\n'.format(slug))
+            fd.write(u'{0}\n'.format(post_date))
+            fd.write(u'{0}\n'.format(','.join(tags)))
+            fd.write(u'\n')
+            fd.write(u'{0}\n'.format(description))
 
     @staticmethod
     def write_urlmap_csv(output_file, url_map):
